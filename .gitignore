@@ -53,3 +53,9 @@ Thumbs.db
 
 # data folder
 data/
+
+# AWS SSH keys
+*.pem
+
+# Windows artifacts
+NUL
