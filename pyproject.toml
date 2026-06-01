@@ -1,0 +1,115 @@
+[tool.poetry]
+name = "rag-course"
+version = "0.1.0"
+description = "RAG system with DDD architecture using Cohere and ChromaDB"
+authors = []
+readme = "README.md"
+packages = [{ include = "rag_course", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.14"
+
+# Cohere
+cohere = ">=5.0.0"
+
+# Vector store
+chromadb = ">=0.5.0"
+
+# LangChain ecosystem
+langchain = ">=0.2.0"
+langchain-community = ">=0.2.0"
+langchain-cohere = ">=0.1.0"
+langchain-chroma = ">=0.1.0"
+langchain-text-splitters = ">=0.2.0"
+
+# PDF parsing
+pypdf = ">=4.0.0"
+pdfplumber = ">=0.11.0"
+pymupdf = ">=1.24.0"          # fitz — fast PDF text/image extraction
+
+# Settings & validation
+pydantic = ">=2.0.0"
+pydantic-settings = ">=2.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0.0"
+pytest-asyncio = ">=0.23.0"
+pytest-cov = ">=5.0.0"
+ruff = ">=0.4.0"
+mypy = ">=1.10.0"
+pre-commit = "^4.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+strict = true
+mypy_path = "src"
+exclude = ["^tests/"]
+
+[[tool.mypy.overrides]]
+module = [
+    "cohere.*",
+    "chromadb.*",
+    "langchain.*",
+    "langchain_core.*",
+    "langchain_text_splitters.*",
+    "langchain_cohere.*",
+    "langchain_chroma.*",
+    "langchain_community.*",
+    "pdfminer.*",
+    "pypdf.*",
+    "pdfplumber.*",
+    "fitz.*",
+    "datasets.*",
+    "ragas.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "--cov=rag_course --cov-report=term-missing --cov-report=xml"
+markers = [
+    "integration: marks tests that require live external services — skipped in CI unless RUN_INTEGRATION=1",
+    "slow: marks tests that take more than a few seconds",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    # Entry-point script — not unit-testable
+    "*/cli.py",
+    # Depends on ragas/datasets which are optional evaluation-only dependencies
+    "*/application/evaluate_use_case.py",
+    # Adapters that call live external services (Cohere, ChromaDB).
+    # These are covered by integration tests, not unit tests.
+    "*/infrastructure/embeddings/*",
+    "*/infrastructure/llm/*",
+    "*/infrastructure/vector_store/*",
+    "*/infrastructure/parsers/*",
+    "*/infrastructure/retriever/*",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+    "raise NotImplementedError",
+]
