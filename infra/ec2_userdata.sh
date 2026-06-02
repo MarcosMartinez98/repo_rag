@@ -31,7 +31,7 @@ systemctl start docker
 # instance has the SSMReadOnlyAccess policy via its IAM role.
 echo "[$(date)] Retrieving secrets from SSM..."
 COHERE_API_KEY=$(aws ssm get-parameter \
-  --name "/${PROJECT}/cohere_api_key" \
+  --name "/rag_course/cohere_api_key" \
   --with-decryption \
   --region "${REGION}" \
   --query "Parameter.Value" \

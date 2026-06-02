@@ -29,10 +29,10 @@ ECR_URI="\${REGISTRY}/${PROJECT}"
 
 echo "  → Logging in to ECR..."
 aws ecr get-login-password --region "${REGION}" | \
-  podman login --username AWS --password-stdin "\${REGISTRY}"
+  sudo docker login --username AWS --password-stdin "\${REGISTRY}"
 
 echo "  → Pulling \${ECR_URI}:${TAG}..."
-podman pull "\${ECR_URI}:${TAG}"
+sudo docker pull "\${ECR_URI}:${TAG}"
 
 echo "  → Restarting systemd service..."
 sudo systemctl restart ${PROJECT}

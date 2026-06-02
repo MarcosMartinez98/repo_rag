@@ -22,7 +22,7 @@ REGION="${AWS_REGION:-eu-west-1}"
 PROJECT="rag-course"
 KEY_PAIR_NAME="${PROJECT}-key"
 SG_NAME="${PROJECT}-sg"
-INSTANCE_TYPE="t2.micro"
+INSTANCE_TYPE="t3.micro"
 
 if [ -z "${COHERE_API_KEY:-}" ]; then
   echo "ERROR: set the COHERE_API_KEY environment variable before running this script."
@@ -149,7 +149,7 @@ echo "  Security group: ${SG_ID}"
 echo ""
 echo "[5/7] Storing COHERE_API_KEY in SSM Parameter Store..."
 aws ssm put-parameter \
-  --name "/${PROJECT}/cohere_api_key" \
+  --name "/rag_course/cohere_api_key" \
   --value "${COHERE_API_KEY}" \
   --type "SecureString" \
   --region "${REGION}" \
