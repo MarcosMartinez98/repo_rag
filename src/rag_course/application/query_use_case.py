@@ -59,7 +59,7 @@ class QueryUseCase:
             ]
         )
         filled_prompt = prompt.format_messages(context=context, question=query)
-        prompt_str = "\n".join(m.content for m in filled_prompt)
+        prompt_str = "\n".join(str(m.content) for m in filled_prompt)
 
         # 4. Llamar al LLM
         answer = self._llm.generate(prompt_str)
