@@ -152,6 +152,9 @@ if __name__ == "__main__":
     FILE_TO_INGEST = r"data\docs\Cont_Pilar_Zaragoza.pdf"  # set to None to skip ingest
     QUERY = "¿El contrato es prorrogable mas de un año?"  # question to ask
 
+
+    # esto es una linea que me invento
+
     logging.getLogger().setLevel(logging.DEBUG)
 
     ingest, query_uc = _build_pipeline()
