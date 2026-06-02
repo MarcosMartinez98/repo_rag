@@ -1,0 +1,36 @@
+name: rag-course
+
+# Local development with Podman Compose.
+# Run with: podman-compose up --build
+#
+# The API will be available at http://172.25.75.31:8000
+# Interactive docs at http://172.25.75.31:8000/docs
+#  Note that this IP may change when the Podman machine restarts — if that happens, run podman machine ssh "ip addr show eth0" to get the new one.ok
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - CHROMA_PERSIST_DIRECTORY=/app/chroma_db
+    volumes:
+      # ChromaDB data survives container restarts
+      - chroma-data:/app/chroma_db
+      # Mount local documents read-only so you can ingest them via the API
+      - ./data:/app/data:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  chroma-data:
+    driver: local

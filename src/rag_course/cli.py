@@ -149,8 +149,10 @@ if __name__ == "__main__":
     #   targeting this file. The FILE_TO_INGEST / QUERY values below are the
     #   only inputs — no extra configuration is needed.
     #
-    FILE_TO_INGEST = r"data\docs\Cont_Pilar_Zaragoza.pdf"  # set to None to skip ingest
-    QUERY = "¿El contrato es prorrogable mas de un año?"  # question to ask
+    FILE_TO_INGEST = r""  # set to None to skip ingest
+    QUERY = ""  # question to ask
+
+    # esto es una linea que me invento
 
     logging.getLogger().setLevel(logging.DEBUG)
 

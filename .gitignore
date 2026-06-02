@@ -50,3 +50,12 @@ Thumbs.db
 
 # Logs
 *.log
+
+# data folder
+data/
+
+# AWS SSH keys
+*.pem
+
+# Windows artifacts
+NUL
