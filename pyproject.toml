@@ -31,6 +31,11 @@ pymupdf = ">=1.24.0"          # fitz — fast PDF text/image extraction
 pydantic = ">=2.0.0"
 pydantic-settings = ">=2.0.0"
 
+# HTTP API
+fastapi = ">=0.111.0"
+uvicorn = ">=0.29.0"
+python-multipart = ">=0.0.9"   # required by FastAPI for file uploads
+
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.0.0"
 pytest-asyncio = ">=0.23.0"
@@ -38,6 +43,7 @@ pytest-cov = ">=5.0.0"
 ruff = ">=0.4.0"
 mypy = ">=1.10.0"
 pre-commit = "^4.6.0"
+podman-compose = "^1.5.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -59,6 +65,18 @@ indent-style = "space"
 strict = true
 mypy_path = "src"
 exclude = ["^tests/"]
+
+# Infrastructure adapters talk directly to external SDKs (Cohere, ChromaDB,
+# LangChain). Those SDKs have incomplete or inconsistent stubs. We silence
+# errors here for the same reason we exclude these files from test coverage:
+# correctness is validated by integration tests, not static analysis.
+[[tool.mypy.overrides]]
+module = [
+    "rag_course.infrastructure.embeddings.*",
+    "rag_course.infrastructure.vector_store.*",
+    "rag_course.infrastructure.retriever.*",
+]
+ignore_errors = true
 
 [[tool.mypy.overrides]]
 module = [
@@ -91,8 +109,9 @@ markers = [
 [tool.coverage.run]
 source = ["src"]
 omit = [
-    # Entry-point script — not unit-testable
+    # Entry-point scripts — not unit-testable
     "*/cli.py",
+    "*/api.py",
     # Depends on ragas/datasets which are optional evaluation-only dependencies
     "*/application/evaluate_use_case.py",
     # Adapters that call live external services (Cohere, ChromaDB).
